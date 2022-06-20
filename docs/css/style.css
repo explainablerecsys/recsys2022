@@ -466,7 +466,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 #intro {
   width: 100%;
   height: 80vh;
-  background:   url(https://upload.wikimedia.org/wikipedia/commons/8/8d/02_Lucca_seen_from_Torre_Guinigi.jpg) top center;
+  background:   url(https://www.viaggi-usa.it/wp-content/uploads/2018/11/Quando-andare-a-Seattle-Clima-e-Temperature.jpg) top center;
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
@@ -656,15 +656,15 @@ body.mobile-nav-active #mobile-nav-toggle {
 # Other Sections
 --------------------------------------------------------------*/
 
-#aims, #organizers, #structure, #resources, #objectives, #abstract, #topics, #dates, #submission, #committee, #program, #attending, #contacts, #editions {
+#aims, #organizers, #structure, #resources, #objectives, #abstract, #topics, #dates, #submission, #committee, #program, #attending, #contacts, #editions, #registration {
   padding: 60px 0 30px 0;
 }
 
-#aims .container-fluid, #organizers .container-fluid, #editions .container-fluid, #structure .container-fluid,  #resources .container-fluid, #objectives .container-fluid, #abstract .container-fluid, #topics .container-fluid, #dates .container-fluid, #submission .container-fluid, #committee .container-fluid, #program .container-fluid, #attending .container-fluid, #contacts .container-fluid {
+#aims .container-fluid, #organizers .container-fluid, #editions .container-fluid, #structure .container-fluid,  #registration .container-fluid, #resources .container-fluid, #objectives .container-fluid, #abstract .container-fluid, #topics .container-fluid, #dates .container-fluid, #submission .container-fluid, #committee .container-fluid, #program .container-fluid, #attending .container-fluid, #contacts .container-fluid {
   margin-bottom: 3px;
 }
 
-#audience > div > div > ul, #aims > div > div > ul, #organizers > div > div > ul, #editions > div > div > ul, #structure > div > div > ul, #resources > div > div > ul, #objectives > div > div > ul, #abstract > div > div > ul, #topics > div > div > ul, #dates > div > div > ul, #submission > div > div > ul, #committee > div > div > ul, #program > div > div > ul, #attending > div > div > ul, #contacts > div > div > ul {
+#audience > div > div > ul, #aims > div > div > ul, #organizers > div > div > ul, #editions > div > div > ul, #registration > div > div > ul#structure > div > div > ul, #resources > div > div > ul, #objectives > div > div > ul, #abstract > div > div > ul, #topics > div > div > ul, #dates > div > div > ul, #submission > div > div > ul, #committee > div > div > ul, #program > div > div > ul, #attending > div > div > ul, #contacts > div > div > ul {
     text-align: left;
     padding: 0;
     margin: 10px auto 30px auto;
