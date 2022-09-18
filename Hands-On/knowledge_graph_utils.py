@@ -1,3 +1,4 @@
+import gzip
 from collections import defaultdict, Counter
 
 from utils import getDF
@@ -20,6 +21,27 @@ def discard_entity_with_lt_th(entities_list, th):
 
 def discard_k_letter_categories(entities_list, k):
     return [x for x in entities_list if len(x) > k]
+
+def entity2plain_text(dataset, method):
+    entity2plain_text_map = defaultdict(dict)
+    if method == "cafe":
+        with gzip.open(f"data/{dataset}/preprocessed/{method}/kg_entities.txt.gz", 'rt') as entities_file:
+            reader = csv.reader(entities_file, delimiter="\t")
+            next(reader, None)
+            for row in reader:
+                row[1] = row[1].split("_")
+                entity_type, local_id = '_'.join(row[1][:-1]), row[1][-1]
+                entity2plain_text_map[entity_type][int(local_id)] = row[-1]
+        entities_file.close()
+    elif method == "pgpr":
+        with gzip.open(f"data/{dataset}/preprocessed/{method}/mappings.txt.gz", 'rt') as entities_file:
+            reader = csv.reader(entities_file, delimiter="\t")
+            next(reader, None)
+            for row in reader:
+                row[0] = row[0].split("_")
+                entity_type, local_id = '_'.join(row[0][:-1]), row[0][-1]
+                entity2plain_text_map[entity_type][int(local_id)] = row[-1]
+    return entity2plain_text_map
 
 def create_kg_from_metadata(dataset):
     input_data = f'data/{dataset}/preprocessed'
@@ -141,4 +163,5 @@ def create_kg_from_metadata(dataset):
             writer.writerow(triple)
     fo.close()
 
-create_kg_from_metadata("cellphones")
+#create_kg_from_metadata("cellphones")
+entity2plain_text("ml1m", "pgpr")

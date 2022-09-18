@@ -340,6 +340,15 @@ def map_to_CAFE(dataset_name, train_size, valid_size=0):
             org_dataset_id2ratings_id[dataset_id] = new_id
     item_to_kg_file.close()
 
+    entity2name = defaultdict(set)
+    with open(input_folder_kg + 'e_map.txt', 'r') as kg_file:
+        reader = csv.reader(kg_file, delimiter="\t")
+        next(reader, None)
+        for row in reader:
+            eid, entity_url = row[0], row[1]
+            entity2name[eid] = (entity_url.split("/")[-1])
+    kg_file.close()
+
     entity2kg_entity_list = defaultdict(set)
     with open(input_folder_kg + 'kg_final.txt', 'r') as kg_file:
         reader = csv.reader(kg_file, delimiter="\t")
@@ -347,8 +356,6 @@ def map_to_CAFE(dataset_name, train_size, valid_size=0):
         for row in reader:
             entity_head, entity_tail, relation = row[0], row[1], row[2]
             entity2kg_entity_list[relation_id2entity[int(relation)]].add(entity_tail)
-            #dataset_new_id = org_dataset_id2ratings_id[kg_entity2org_dataset_id[entity_head]]
-            #relation_pid_to_entity[relation_id2relation_name[int(relation)]][dataset_new_id].append(entity_tail)
     kg_file.close()
 
     entity_type_eid2global_id = defaultdict(dict)
@@ -384,7 +391,7 @@ def map_to_CAFE(dataset_name, train_size, valid_size=0):
                     entity_type_eid2global_id['product'][org_dataset_id2kg_entity[old_id]] = global_id
                 else:
                     entity_type_eid2global_id['product'][ratings_id] = global_id
-                writer.writerow([global_id, f"product_{local_id}", old_id])
+                writer.writerow([global_id, f"product_{local_id}", entity2name[old_id]])
                 global_id+=1
         product_file.close()
 
@@ -393,7 +400,7 @@ def map_to_CAFE(dataset_name, train_size, valid_size=0):
             for local_id, entity in enumerate(entity_list):
                 if entity_name == "product":
                     continue
-                writer.writerow([global_id, f"{entity_name}_{local_id}", entity])
+                writer.writerow([global_id, f"{entity_name}_{local_id}", entity2name[entity]])
                 entity_type_eid2global_id[entity_name][entity] = global_id
                 global_id+=1
     entity_file.close()
@@ -507,6 +514,16 @@ def map_to_PGPR(dataset_name):
             relation_id2relation_name[relation_id] = relation_id2entity[relation_id] + f'_p_{relation_id2entity[relation_id][:2]}'
     relation_file.close()
 
+    entity_type_id2plain_name = defaultdict(dict)
+    org_datasetid2movie_title = {}
+    with open('data/ml1m/movies.dat', 'r', encoding="latin-1") as org_movies_file:
+        reader = csv.reader(org_movies_file)
+        next(reader, None)
+        for row in reader:
+            row = row[0].split("::")
+            org_datasetid2movie_title[row[0]] = row[1]
+    org_movies_file.close()
+
     entity2dataset_id = {}
     with open(input_folder_kg + 'i2kg_map.txt', 'r') as item_to_kg_file:
         reader = csv.reader(item_to_kg_file, delimiter="\t")
@@ -514,6 +531,7 @@ def map_to_PGPR(dataset_name):
         for row in reader:
             dataset_id, entity_id = row[0], row[-1]
             entity2dataset_id[entity_id] = dataset_id
+
     item_to_kg_file.close()
 
     dataset_id2new_id = {}
@@ -522,6 +540,7 @@ def map_to_PGPR(dataset_name):
         next(reader, None)
         for row in reader:
             new_id, dataset_id = row[0], row[1]
+            entity_type_id2plain_name["product"][new_id] = org_datasetid2movie_title[dataset_id]
             dataset_id2new_id[dataset_id] = new_id
     item_to_kg_file.close()
 
@@ -553,8 +572,21 @@ def map_to_PGPR(dataset_name):
             writer.writerow(['new_id', 'name'])
             for new_id, entity in enumerate(entity_list):
                 writer.writerow([new_id, entity])
+                if entity in entity_to_entity_url:
+                    entity_type_id2plain_name[entity_name][new_id] = entity_to_entity_url[entity]
+                else:
+                    entity_type_id2plain_name[entity_name][new_id] = new_id
                 entity_id2new_id[entity_name][entity] = new_id
         entity_file.close()
+
+    with gzip.open(output_folder + f'mappings.txt.gz', 'wt') as mapping_file:
+        writer = csv.writer(mapping_file, delimiter="\t")
+        for entity_type, entities in entity_type_id2plain_name.items():
+            for entity in entities:
+                name = entity_type_id2plain_name[entity_type][entity]
+                name = name.split("/")[-1] if type(name) == str else str(name)
+                writer.writerow([f"{entity_type}_{entity}", name])
+    mapping_file.close()
 
     for relation_name, items_list in relation_pid_to_entity.items():
         entity_name = relation_name2entity_name[dataset_name][relation_name]
@@ -696,6 +728,6 @@ def map_to_PGPR_amazon(dataset_name):
         users_file.close()
     users_fileo.close()
 
-#map_to_PGPR(LFM1M)
-map_to_CAFE(CELL, 0.8)
-#write_time_based_train_test_split(CELL, "pgpr", 0.8, 0)
+map_to_PGPR(ML1M)
+#map_to_CAFE(ML1M, 0.8)
+#write_time_based_train_test_split(LFM1M, "pgpr", 0.8, 0)

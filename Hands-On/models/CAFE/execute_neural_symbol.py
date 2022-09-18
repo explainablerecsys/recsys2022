@@ -1,6 +1,9 @@
 from __future__ import absolute_import, division, print_function
 
+import csv
 import sys
+from collections import defaultdict
+
 import numpy as np
 import pickle
 import logging
@@ -167,7 +170,7 @@ class MetaProgramExecutor(object):
         user_vec = self.symbolic_model.embedding(USER, uid_tensor)  # tensor [1, d]
         root = program.root  # TreeNode
         root.data['vec'] = user_vec  # tensor [1, d]
-        root.data['paths'] = [([uid], [], [])]  # (path, value, mp)
+        root.data['paths'] = [([uid], [], [], [])]  # (path, value, mp)
 
         excluded_pids = [] if excluded_pids is None else excluded_pids.copy()
 
@@ -189,7 +192,7 @@ class MetaProgramExecutor(object):
 
             node.data['paths'] = []
             visited_ids = []
-            for path, value, mp in node.parent.data['paths']:
+            for path, value, ep, mp in node.parent.data['paths']:
                 # Find valid node ids for current path.
                 valid_ids = self.kg_mask.get_ids(node.parent.entity, path[-1], node.relation)
                 valid_ids = set(valid_ids).difference(visited_ids)
@@ -213,7 +216,8 @@ class MetaProgramExecutor(object):
                     new_path = path + [topk_ids[j]]
                     new_value = value + [topk_scores[j]]
                     new_mp = mp + [node.relation]
-                    node.data['paths'].append((new_path, new_value, new_mp))
+                    new_ep = ep + [node.entity]
+                    node.data['paths'].append((new_path, new_value, new_ep, new_mp))
 
                     # Remember to add the node to visited list!!!
                     visited_ids.append(topk_ids[j])
@@ -221,10 +225,12 @@ class MetaProgramExecutor(object):
                         excluded_pids.append(topk_ids[j])
 
     def collect_results(self, program):
-        results = []
+        entities, results = [], []
+        #entities.append(program.root.entity)
         queue = program.root.get_children()
         while len(queue) > 0:
             node = queue.pop(0)
+            #entities.append(node.entity)
             queue.extend(node.get_children())
             if not node.has_children():
                 results.extend(node.data['paths'])
@@ -361,6 +367,23 @@ def create_heuristic_program(metapaths, raw_paths_with_scores, prior_count, samp
     program_layout.update_by_path_count(norm_count)
     return program_layout
 
+def save_pred_paths(dataset, pred_paths):
+    if not os.path.isdir("../../results/"):
+        os.makedirs("../../results/")
+
+    extracted_path_dir = f"../../results/{dataset}"
+    if not os.path.isdir(extracted_path_dir):
+        os.makedirs(extracted_path_dir)
+
+    extracted_path_dir = extracted_path_dir + "/cafe"
+    if not os.path.isdir(extracted_path_dir):
+        os.makedirs(extracted_path_dir)
+
+    print(f"Sabing predicted paths in {extracted_path_dir} + /pred_paths.pkl")
+
+    with open(extracted_path_dir + "/pred_paths.pkl", 'wb') as pred_paths_file:
+        pickle.dump(pred_paths, pred_paths_file)
+    pred_paths_file.close()
 
 def run_program(args):
     kg = load_kg(args.dataset)
@@ -377,15 +400,28 @@ def run_program(args):
 
     pred_labels = {}
     pbar = tqdm(total=len(test_labels))
+    pred_paths_istances = []
     for uid in test_labels:
         program = create_heuristic_program(kg.metapaths, raw_paths[uid], path_counts[uid], args.sample_size)
         program_exe.execute(program, uid, train_labels[uid])
         paths = program_exe.collect_results(program)
         tmp = [(r[0][-1], np.mean(r[1][-1])) for r in paths]
+        for r in paths:
+            path = ['user'] + [str(r[0][0])]
+            for i in range(len(r[-1])):
+                path.append(r[-1][i])
+                path.append(r[2][i])
+                path.append(r[0][i+1])
+                if i == len(r[-1])-1: continue
+            pred_paths_istances.append([r[0][0], r[0][-1], np.mean(r[1][-1]), np.mean(r[1]), path])
         tmp = sorted(tmp, key=lambda x: x[1], reverse=True)[:10]
+
         pred_labels[uid] = [t[0] for t in tmp]
         pbar.update(1)
-
+    with open("/home/gballoccu/Desktop/RecSys22-Tutorial/Hands-On/results/ml1m/cafe" + "/red_labels.pkl", 'wb') as pred_paths_file:
+        pickle.dump(pred_labels, pred_paths_file)
+    pred_paths_file.close()
+    save_pred_paths(args.dataset, pred_paths_istances)
     msg = evaluate_with_insufficient_pred(pred_labels, test_labels)
     logger.info(msg)
 
@@ -401,7 +437,7 @@ def main():
         logfile = f'{args.log_dir}/program_exe_heuristic_ss{args.sample_size}.txt'
         set_logger(logfile)
         logger.info(args)
-        for i in range(10):
+        for i in range(1):
             logger.info(i + 1)
             run_program(args)
 

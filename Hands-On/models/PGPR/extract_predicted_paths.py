@@ -1,4 +1,8 @@
 import csv
+import pickle
+
+import pandas as pd
+
 
 def save_pred_paths(folder_path, pred_paths, train_labels):
     print("Normalizing items scores...")
@@ -13,21 +17,22 @@ def save_pred_paths(folder_path, pred_paths, train_labels):
     max_score = max(score_list)
 
     print("Saving pred_paths...")
-    with open(folder_path + "/pred_paths.csv", 'w+', newline='') as pred_paths_file:
-        header = ["uid", "pid", "path_score", "path_prob", "path"]
-        writer = csv.writer(pred_paths_file)
-        writer.writerow(header)
-        for uid, pid in pred_paths.items():
-            for pid, path_list in pred_paths[uid].items():
-                if pid in set(train_labels[uid]): continue
-                for path in path_list:
-                    path_score = str((float(path[0]) - min_score) / (max_score - min_score))
-                    path_prob = path[1]
-                    path_explaination = []
-                    for tuple in path[2]:
-                        for x in tuple:
-                            path_explaination.append(str(x))
-                    writer.writerow([uid, pid, path_score, path_prob, ' '.join(path_explaination)])
+    header = ["uid", "pid", "path_score", "path_prob", "path"]
+    records = []
+    #records.append(header)
+    for uid, pid in pred_paths.items():
+        for pid, path_list in pred_paths[uid].items():
+            if pid in set(train_labels[uid]): continue
+            for path in path_list:
+                path_score = str((float(path[0]) - min_score) / (max_score - min_score))
+                path_prob = path[1]
+                path_explaination = []
+                for tuple in path[2]:
+                    for x in tuple:
+                        path_explaination.append(str(x))
+                records.append([uid, pid, path_score, path_prob, ' '.join(path_explaination)])
+    with open(folder_path + "/pred_paths.pkl", 'wb') as pred_paths_file:
+        pickle.dump(records, pred_paths_file)
     pred_paths_file.close()
 
 def save_best_pred_paths(folder_path, best_pred_paths):

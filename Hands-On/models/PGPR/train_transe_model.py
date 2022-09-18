@@ -246,7 +246,7 @@ def main():
     logger.info(args)
 
     set_random_seed(args.seed)
-    #train(args)
+    train(args)
     extract_embeddings(args)
 
 

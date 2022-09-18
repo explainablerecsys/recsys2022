@@ -223,6 +223,10 @@ def evaluate_paths(dataset_name, path_file, train_labels, test_labels, exp_prope
     if not os.path.isdir(extracted_path_dir):
         os.makedirs(extracted_path_dir)
 
+    extracted_path_dir = extracted_path_dir + "/pgpr"
+    if not os.path.isdir(extracted_path_dir):
+        os.makedirs(extracted_path_dir)
+
     save_pred_paths(extracted_path_dir, pred_paths, train_labels)
 
     # 2) Pick best path for each user-product pair, also remove pid if it is in train set.
@@ -257,9 +261,6 @@ def evaluate_paths(dataset_name, path_file, train_labels, test_labels, exp_prope
         top10_pids = [p[-1][2] for _, _, p in sorted_path[:10]]  # from largest to smallest
         top10_paths = [p for _, _, p in sorted_path[:10]] #paths for the top10
 
-        top10_path_pattern_names = [p[-1][0] for _, _, p in sorted_path[:10]] #Diversity
-        top10_path_interaction_pid = [p[1][-1] for _,_, p in sorted_path[:10]] #Time relevance
-        path_pattern_names = [p[-1][0] for _, _, p in sorted_path[:10]] #Diversity
         # add up to 10 pids if not enough
         if args.add_products and len(top10_pids) < 10:
             train_pids = set(train_labels[uid])
@@ -318,7 +319,7 @@ if __name__ == '__main__':
     parser.add_argument('--hidden', type=int, nargs='*', default=[512, 256], help='number of samples')
     parser.add_argument('--add_products', type=boolean, default=False, help='Add predicted products up to 10')
     parser.add_argument('--topk', type=list, nargs='*', default=[25,50,1], help='number of samples')
-    parser.add_argument('--run_path', type=boolean, default=False, help='Generate predicted path? (takes long time)')
+    parser.add_argument('--run_path', type=boolean, default=True, help='Generate predicted path? (takes long time)')
     parser.add_argument('--run_eval', type=boolean, default=True, help='Run evaluation?')
     args = parser.parse_args()
 
