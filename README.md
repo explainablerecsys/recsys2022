@@ -11,8 +11,64 @@
 Hands on Tutorial on Explainable Recommender Systems with Knowledge Graphs held as part of the 16th ACM Conference on 
 Recommender Systems, Seattle, WA, USA, 18th-23rd September 2022. 
 
+
 ## Material
-You can find the material of this tutorial, including datasets and pretrained in our [google drive folder](https://drive.google.com/drive/folders/1r2Mj7gMZn8lhsoXMekqmJuGbzqu9YOoh?usp=sharing).
+- [Video Recording](https://vimeo.com/751046329?embedded=true&source=vimeo_logo&owner=184110944)
+- [Slides](https://www.slideshare.net/GiacomoBalloccu/hands-on-explainable-recommender-systems-with-knowledge-graphs-recsys22)
+- [Drive Folder](https://drive.google.com/drive/folders/1FBnh8SJvdTgmJoUoMvrzg7BppiHO8oIc?usp=sharing)
+- [Notebook 1: Data, KG and Preprocessing](https://colab.research.google.com/drive/199vMjGDzH4UyfznKm-mZomnI645RaiLE?usp=sharing)
+- [Notebook 2: PGPR](https://colab.research.google.com/drive/1YH9sXAybc0MYmuT3542QwuLUgxXUgF0G?usp=sharing)
+- [Notebook 3: CAFE](https://colab.research.google.com/drive/1ZctoVFA4qyFSv5KYGzX7XqnDMwaNBytb?usp=sharing)
+- [Notebook 4: Evaluation and Explanation Generation](https://colab.research.google.com/drive/1B-56YvvKFOx573C8QOvN65q1PufZhcLd?usp=sharing)
+
+## Citation 
+If the tutorial slides are useful for your research, we would appreciate an acknowledgment by citing our summary in the RecSys '22 proceedings:
+```
+@inproceedings{10.1145/3523227.3547374,
+author = {Balloccu, Giacomo and Boratto, Ludovico and Fenu, Gianni and Marras, Mirko},
+title = {Hands on Explainable Recommender Systems with Knowledge Graphs},
+year = {2022},
+isbn = {9781450392785},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3523227.3547374},
+doi = {10.1145/3523227.3547374},
+booktitle = {Proceedings of the 16th ACM Conference on Recommender Systems},
+pages = {710–713},
+numpages = {4},
+keywords = {Explainability, Recommender Systems, Knowledge Graphs, Responsible Recommendation.},
+location = {Seattle, WA, USA},
+series = {RecSys '22}
+}
+```
+
+If the tutorial notebooks are useful for your research, we would appreciate an acknowledgment by citing our SIGIR '22 paper:
+```
+@inproceedings{10.1145/3477495.3532041,
+author = {Balloccu, Giacomo and Boratto, Ludovico and Fenu, Gianni and Marras, Mirko},
+title = {Post Processing Recommender Systems with Knowledge Graphs for Recency, Popularity, and Diversity of Explanations},
+year = {2022},
+isbn = {9781450387323},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3477495.3532041},
+doi = {10.1145/3477495.3532041},
+booktitle = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+pages = {646–656},
+numpages = {11},
+keywords = {knowledge graphs, recommender systems, explainability, fairness},
+location = {Madrid, Spain},
+series = {SIGIR '22}
+}
+```
+
+```
+@inproceedings{Balloccu2022ReinforcementRR,
+  title={Reinforcement Recommendation Reasoning through Knowledge Graphs for Explanation Path Quality},
+  author={Giacomo Balloccu and Ludovico Boratto and Gianni Fenu and Mirko Marras},
+  year={2022}
+}
+```
 
 
 ## Acknowledgements
