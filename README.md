@@ -13,6 +13,7 @@ Recommender Systems, Seattle, WA, USA, 18th-23rd September 2022.
 
 
 ## Material
+- [Website](https://explainablerecsys.github.io/recsys2022/)
 - [Video Recording](https://vimeo.com/751046329?embedded=true&source=vimeo_logo&owner=184110944)
 - [Slides](https://www.slideshare.net/GiacomoBalloccu/hands-on-explainable-recommender-systems-with-knowledge-graphs-recsys22)
 - [Drive Folder](https://drive.google.com/drive/folders/1FBnh8SJvdTgmJoUoMvrzg7BppiHO8oIc?usp=sharing)
