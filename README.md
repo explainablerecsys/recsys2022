@@ -1,6 +1,6 @@
 # Hands on Explainable Recommender Systems with Knowledge Graphs
 
-Please note that an upgraded ![framework](https://github.com/giacoballoccu/rep-path-reasoning-recsys) has been presented for the ECIR23 conference and will be used in the following versions of the tutorial. It handles more models and evaluations.
+Please note that an upgraded [framework](https://github.com/giacoballoccu/rep-path-reasoning-recsys) has been presented for the ECIR23 conference and will be used in the following versions of the tutorial. It handles more models and evaluations.
 
 [![GitHub version](https://badge.fury.io/gh/boennemann%2Fbadges.svg)](http://badge.fury.io/gh/boennemann%2Fbadges)
 [![Open Source Love](https://badges.frapsoft.com/os/gpl/gpl.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
